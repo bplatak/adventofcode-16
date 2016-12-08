@@ -1,0 +1,83 @@
+name:              adventofcode
+version:           1.0
+Build-Type:        Simple
+cabal-version:     >= 1.2
+
+
+executable day1
+  main-is:         day1.hs
+  hs-source-dirs:  day1
+  build-depends:   base, split
+executable day2
+  main-is:         day2.hs
+  hs-source-dirs:  day2
+executable day3
+  main-is:         day3.hs
+  hs-source-dirs:  day3
+executable day4
+  main-is:         day4.hs
+  hs-source-dirs:  day4
+executable day5
+  main-is:         day5.hs
+  hs-source-dirs:  day5
+  build-depends:   pureMD5, containers, bytestring
+executable day6
+  main-is:         day6.hs
+  hs-source-dirs:  day6
+executable day7
+  main-is:         day7.hs
+  hs-source-dirs:  day7
+executable day8
+  main-is:         day8.hs
+  hs-source-dirs:  day8
+executable day9
+  main-is:         day9.hs
+  hs-source-dirs:  day9
+executable day10
+  main-is:         day10.hs
+  hs-source-dirs:  day10
+executable day11
+  main-is:         day11.hs
+  hs-source-dirs:  day11
+executable day12
+  main-is:         day12.hs
+  hs-source-dirs:  day12
+executable day13
+  main-is:         day13.hs
+  hs-source-dirs:  day13
+executable day14
+  main-is:         day14.hs
+  hs-source-dirs:  day14
+executable day15
+  main-is:         day15.hs
+  hs-source-dirs:  day15
+executable day16
+  main-is:         day16.hs
+  hs-source-dirs:  day16
+executable day17
+  main-is:         day17.hs
+  hs-source-dirs:  day17
+executable day18
+  main-is:         day18.hs
+  hs-source-dirs:  day18
+executable day19
+  main-is:         day19.hs
+  hs-source-dirs:  day19
+executable day20
+  main-is:         day20.hs
+  hs-source-dirs:  day20
+executable day21
+  main-is:         day21.hs
+  hs-source-dirs:  day21
+executable day22
+  main-is:         day22.hs
+  hs-source-dirs:  day22
+executable day23
+  main-is:         day23.hs
+  hs-source-dirs:  day23
+executable day24
+  main-is:         day24.hs
+  hs-source-dirs:  day24
+executable day25
+  main-is:         day25.hs
+  hs-source-dirs:  day25
