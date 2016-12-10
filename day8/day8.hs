@@ -10,7 +10,7 @@ type Screen      = [Row]
 type MaybeScreen = [MaybeRow]
 type Mutator     = Screen -> Screen 
 
--- Parse the command 
+-- Parse the command
 parse :: String -> Mutator 
 parse (stripPrefix "rect " -> Just args)            = rect(vals!!0, vals!!1) 
     where vals = map read $ splitOn "x" args
