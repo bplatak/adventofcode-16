@@ -1,14 +1,12 @@
-
 import qualified Data.ByteString.Char8 as BS 
 import qualified Crypto.Hash.MD5 as MD5
 import qualified Data.ByteString.Base16 as BS16
 
-
 type HashMeta = (Maybe Char, [Char])
 
 -- Generate an infinite list of MD5 hashes 
-hashes :: String -> [String]
-hashes salt = map hash $ strings 0
+hashes :: Int -> String -> [String]
+hashes n salt = map (foldr (.) id $ replicate n hash) $ strings 0
     where strings idx = (salt ++ (show idx)):strings (idx+1)
           hash        = BS.unpack . BS16.encode . MD5.hash . BS.pack
 
@@ -36,7 +34,8 @@ isKey hashes idx = let (tri, quin) = hashes!!idx in case tri of
     Nothing -> False 
 
 main = do 
-    let h = hashes "cuanljph"
-    let metas = map meta $ h
+    let hashes1     = hashes 1      "cuanljph" 
+    let hashes2017  = hashes 2017   "cuanljph" 
 
-    print $ (filter (isKey metas) [0..])!!63
+    print $ (filter (isKey $ map meta $ hashes1) [0..])!!63
+    print $ (filter (isKey $ map meta $ hashes2017) [0..])!!63
