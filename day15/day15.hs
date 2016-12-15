@@ -7,7 +7,7 @@ type Disc = (Int, Int, Int) -- (id, #pos, start pos)
 
 -- Check if a dics is open if ball dropped at a specific time 
 isOpen :: Disc -> Int -> Bool 
-isOpen (i,n,s) t = (s+t+i) `mod` n == 0
+isOpen (i,n,s) t = (s+t+i) `rem` n == 0
 
 -- Solve part 1 of the problem 
 solve :: [Disc] -> Int 
