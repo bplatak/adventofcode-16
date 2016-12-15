@@ -5,11 +5,6 @@ import Data.Maybe      (fromJust)
 -- Define data types 
 type Disc = (Int, Int, Int) -- (id, #pos, start pos)
 
--- Parse a single line of the input 
-parseLine :: String -> Disc 
-parseLine line = (read (drop 1 i),read n,read (init s)) 
-    where (_:i:_:n:_:_:_:_:_:_:_:s:[]) = splitOn " " line 
-
 -- Check if a dics is open if ball dropped at a specific time 
 isOpen :: Disc -> Int -> Bool 
 isOpen (i,n,s) t = (s+t+i) `mod` n == 0
@@ -21,7 +16,8 @@ solve discs = fromJust $ findIndex id ts
           ts    = map (\t -> all id $ map ($ t) funcs) [0..]
 
 main = do
-    input <- (map parseLine . lines) <$> readFile "day15/data/data.in"
+    let input1 = [(1,17,5),(2,19,8),(3,7,1),(4,13,7),(5,5,1),(6,3,0)]
+    let input2 = input1++[(7,11,0)]
 
-    print $ solve input
- 
+    print $ solve input1
+    print $ solve input2
