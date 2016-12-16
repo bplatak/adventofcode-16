@@ -1,6 +1,4 @@
-import Data.List.Split (chunksOf)
-
--- -- Generate given amount of data using modified dragon curve and initial state
+-- Generate given amount of data using modified dragon curve and initial state
 modifiedDragonCurve :: [Bool] -> Int -> [Bool]
 modifiedDragonCurve s x = take x $ (iterate f s)!!idx
     where f s     = s ++ [False] ++ (map not . reverse) s 
