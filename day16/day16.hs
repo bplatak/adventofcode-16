@@ -16,11 +16,12 @@ modifiedDragonCurve s x = take x $ (iterate f s)!!idx
 
 -- Generate checksum 
 checksum :: [Bool] -> [Bool]
-checksum dta | odd $ length csum = csum
+checksum dta | odd $ length csum = csum  
              | otherwise         = checksum csum
-    where csum = map c $ chunksOf 2 dta 
-          c (a:b:[]) | a==b = True
-                     | a/=b = False
+    where f (a:b:rest) | a==b = [True] ++ f rest
+                       | a/=b = [False] ++ f rest
+          f []         = []
+          csum         = f dta 
 
 -- Convert int <-> bool
 boolToInt a = case a of True -> 1; False -> 0;
