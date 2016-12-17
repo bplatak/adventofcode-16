@@ -3,9 +3,9 @@ import qualified Data.Set as Set
 import Debug.Trace 
 
 -- Define data types 
-data Type  = H | Li | Pm | Co | Cu | Ru | Pu      deriving (Eq, Show, Ord)
-data Item  = Chip Type | Gen Type                 deriving (Eq, Show, Ord)
-data Dir   = U | D                                deriving (Eq, Show)
+data Type  = H | Li | Pm | Co | Cu | Ru | Pu | El | Di deriving (Eq, Show, Ord)
+data Item  = Chip Type | Gen Type                      deriving (Eq, Show, Ord)
+data Dir   = U | D                                     deriving (Eq, Show)
 type State = (Int, [[Item]], [Move]) -- (floor, items, moves so far)
 type Move  = (Dir, [Item])
 type Visited = Set.Set (Int, [[Item]])
@@ -48,7 +48,7 @@ mutState s@(f, its, moves) m@(d, i) = (nf, items, ns)::State
     ns     = moves++[m]
 
 -- BFS search until a solutions is found 
--- bfs :: [State] -> Visited -> State 
+bfs :: [State] -> Visited -> State 
 bfs [] visited =  error "No solution!"
 bfs (c@(f,i,s):rest) visited | finished  = c
                              | otherwise = bfs (rest ++ newStates) (Set.insert (f, sorted i) visited)
@@ -63,31 +63,14 @@ bfs (c@(f,i,s):rest) visited | finished  = c
 
 
 main = do 
-
-  let (_, _, s) = bfs [input] Set.empty 
+  -- Solve part 1
+  let part1 = (0, [[Gen Pm, Chip Pm], [Gen Co, Gen Cu, Gen Ru, Gen Pu], [Chip Co, Chip Cu, Chip Ru, Chip Pu], []], [])::State
+  let (_, _, s) = bfs [part1] Set.empty 
   print $ length s 
   print $ s 
 
-input = (0, [[Gen Pm, Chip Pm], [Gen Co, Gen Cu, Gen Ru, Gen Pu], [Chip Co, Chip Cu, Chip Ru, Chip Pu], []], [])::State 
-test = (0, [[Chip H, Chip Li], [Gen H], [Gen Li], []], [])::State
-
-
--- Test data 
-t1 = (0,[[Chip Li,Chip H],[Gen H],[Gen Li],[]],[])::State
-t2 = (1,[[Chip Li],[Chip H,Gen H],[Gen Li],[]],[(U,[Chip H])])::State
-t3 = (2,[[Chip Li],[],[Chip H,Gen Li,Gen H],[]],[(U,[Chip H]),(U,[Gen H,Chip H])])::State
-t4 = (1,[[Chip Li],[Chip H],[Gen Li,Gen H],[]],[(U,[Chip H]),(U,[Gen H,Chip H]),(D,[Chip H])])::State
-t5 = (0,[[Chip Li,Chip H],[],[Gen Li,Gen H],[]],[(U,[Chip H]),(U,[Gen H,Chip H]),(D,[Chip H]),(D,[Chip H])])::State
-t6 = (1,[[],[Chip Li,Chip H],[Gen Li,Gen H],[]],[(U,[Chip H]),(U,[Gen H,Chip H]),(D,[Chip H]),(D,[Chip H]),(U,[Chip Li,Chip H])])::State
-t7 = (2,[[],[],[Chip Li,Chip H,Gen Li,Gen H],[]],[(U,[Chip H]),(U,[Gen H,Chip H]),(D,[Chip H]),(D,[Chip H]),(U,[Chip Li,Chip H]),(U,[Chip Li,Chip H])])::State
-t8 = (3,[[],[],[Gen Li,Gen H],[Chip Li,Chip H]],[(U,[Chip H]),(U,[Gen H,Chip H]),(D,[Chip H]),(D,[Chip H]),(U,[Chip Li,Chip H]),(U,[Chip Li,Chip H]),(U,[Chip Li,Chip H])])::State
-t9 = (2,[[],[],[Chip H,Gen Li,Gen H],[Chip Li]],[(U,[Chip H]),(U,[Gen H,Chip H]),(D,[Chip H]),(D,[Chip H]),(U,[Chip Li,Chip H]),(U,[Chip Li,Chip H]),(U,[Chip Li,Chip H]),(D,[Chip H])])::State
-t10 = (3,[[],[],[Chip H],[Chip Li,Gen Li,Gen H]],[(U,[Chip H]),(U,[Gen H,Chip H]),(D,[Chip H]),(D,[Chip H]),(U,[Chip Li,Chip H]),(U,[Chip Li,Chip H]),(U,[Chip Li,Chip H]),(D,[Chip H]),(U,[Gen Li,Gen H])])::State
-t11 = (2,[[],[],[Chip Li,Chip H],[Gen Li,Gen H]],[(U,[Chip H]),(U,[Gen H,Chip H]),(D,[Chip H]),(D,[Chip H]),(U,[Chip Li,Chip H]),(U,[Chip Li,Chip H]),(U,[Chip Li,Chip H]),(D,[Chip H]),(U,[Gen Li,Gen H]),(D,[Chip Li])])::State
-t12 = (3,[[],[],[],[Chip Li,Chip H,Gen Li,Gen H]],[(U,[Chip H]),(U,[Gen H,Chip H]),(D,[Chip H]),(D,[Chip H]),(U,[Chip Li,Chip H]),(U,[Chip Li,Chip H]),(U,[Chip Li,Chip H]),(D,[Chip H]),(U,[Gen Li,Gen H]),(D,[Chip Li]),(U,[Chip H,Chip Li])])::State
-
-
-visited = Set.fromList [[[],[],[Chip Li],[Chip H,Gen Li,Gen H]],[[],[],[Chip Li,Chip H],[Gen Li,Gen H]],[[],[],[Chip Li,Chip H,Gen Li,Gen H],[]],[[],[],[Chip Li,Gen Li],[Chip H,Gen H]],[[],[],[Chip Li,Gen Li,Gen H],[Chip H]],[[],[],[Chip H],[Chip Li,Gen Li,Gen H]],[[],[],[Chip H,Gen Li,Gen H],[Chip Li]],[[],[],[Chip H,Gen H],[Chip Li,Gen Li]],[[],[],[Gen Li,Gen H],[Chip Li,Chip H]],[[],[Chip Li],[Chip H,Gen Li,Gen H],[]],[[],[Chip Li],[Gen Li,Gen H],[Chip H]],[[],[Chip Li,Chip H],[Gen Li,Gen H],[]],[[],[Chip Li,Gen Li],[Chip H,Gen H],[]],[[],[Chip Li,Gen Li],[Gen H],[Chip H]],[[],[Chip H],[Chip Li,Gen Li,Gen H],[]],[[],[Chip H],[Gen Li,Gen H],[Chip Li]],[[],[Chip H,Gen H],[Chip Li,Gen Li],[]],[[],[Chip H,Gen H],[Gen Li],[Chip Li]],[[],[Gen Li],[Chip H,Gen H],[Chip Li]],[[],[Gen Li,Gen H],[Chip Li],[Chip H]],[[],[Gen Li,Gen H],[Chip Li,Chip H],[]],[[],[Gen Li,Gen H],[Chip H],[Chip Li]],[[],[Gen H],[Chip Li,Gen Li],[Chip H]],[[Chip Li],[],[Chip H,Gen Li,Gen H],[]],[[Chip Li],[],[Gen Li,Gen H],[Chip H]],[[Chip Li],[Chip H],[Gen Li,Gen H],[]],[[Chip Li],[Gen Li],[Chip H,Gen H],[]],[[Chip Li],[Gen Li],[Gen H],[Chip H]],[[Chip Li,Chip H],[],[Gen Li,Gen H],[]],[[Chip Li,Gen Li],[],[Chip H,Gen H],[]],[[Chip Li,Gen Li],[],[Gen H],[Chip H]],[[Chip H],[],[Chip Li,Gen Li,Gen H],[]],[[Chip H],[],[Gen Li,Gen H],[Chip Li]],[[Chip H],[Chip Li],[Gen Li,Gen H],[]],[[Chip H],[Gen H],[Chip Li,Gen Li],[]],[[Chip H],[Gen H],[Gen Li],[Chip Li]],[[Chip H,Gen H],[],[Chip Li,Gen Li],[]],[[Chip H,Gen H],[],[Gen Li],[Chip Li]],[[Gen Li],[],[Chip H,Gen H],[Chip Li]],[[Gen Li],[Chip Li],[Chip H,Gen H],[]],[[Gen Li],[Chip Li],[Gen H],[Chip H]],[[Gen Li],[Gen H],[Chip Li],[Chip H]],[[Gen Li],[Gen H],[Chip Li,Chip H],[]],[[Gen Li],[Gen H],[Chip H],[Chip Li]],[[Gen Li,Gen H],[],[Chip Li],[Chip H]],[[Gen Li,Gen H],[],[Chip Li,Chip H],[]],[[Gen Li,Gen H],[],[Chip H],[Chip Li]],[[Gen H],[],[Chip Li,Gen Li],[Chip H]],[[Gen H],[Chip H],[Chip Li,Gen Li],[]],[[Gen H],[Chip H],[Gen Li],[Chip Li]],[[Gen H],[Gen Li],[Chip Li],[Chip H]],[[Gen H],[Gen Li],[Chip Li,Chip H],[]],[[Gen H],[Gen Li],[Chip H],[Chip Li]]]
-isVisited (_,x,_) = Set.member (map sort x) visited
-
-
+  -- Solve part 2
+  let part2 = (0, [[Gen El, Chip El, Gen Di, Chip Di, Gen Pm, Chip Pm], [Gen Co, Gen Cu, Gen Ru, Gen Pu], [Chip Co, Chip Cu, Chip Ru, Chip Pu], []], [])::State  
+  let (_, _, s) = bfs [part2] Set.empty 
+  print $ length s 
+  print $ s 
