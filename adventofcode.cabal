@@ -66,6 +66,8 @@ executable day17
 executable day18
   main-is:         day18.hs
   hs-source-dirs:  day18
+  ghc-options:     -Wall -O2
+  build-depends:   
 executable day19
   main-is:         day19.hs
   hs-source-dirs:  day19
