@@ -39,7 +39,7 @@ executable day10
 executable day11
   main-is:         day11.hs
   hs-source-dirs:  day11
-  build-depends:   permutation
+  ghc-options:     -Wall -O2
 executable day12
   main-is:         day12.hs
   hs-source-dirs:  day12

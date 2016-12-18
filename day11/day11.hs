@@ -1,4 +1,4 @@
-import Data.List ((\\), subsequences, sort)
+import Data.List ((\\), subsequences, sort, nub, findIndex, groupBy, sortBy)
 import qualified Data.Set as Set 
 import Debug.Trace 
 
@@ -8,7 +8,7 @@ data Item  = Chip Type | Gen Type                      deriving (Eq, Show, Ord)
 data Dir   = U | D                                     deriving (Eq, Show)
 type State = (Int, [[Item]], [Move]) -- (floor, items, moves so far)
 type Move  = (Dir, [Item])
-type Visited = Set.Set (Int, [[Item]])
+type Visited = Set.Set (Int, [[Int]])
 
 -- Check if a combination of items is legal 
 isLegal :: [Item] -> Bool 
@@ -51,7 +51,7 @@ mutState s@(f, its, moves) m@(d, i) = (nf, items, ns)::State
 bfs :: [State] -> Visited -> State 
 bfs [] visited =  error "No solution!"
 bfs (c@(f,i,s):rest) visited | finished  = c
-                             | otherwise = bfs (rest ++ newStates) (Set.insert (f, sorted i) visited)
+                             | otherwise = bfs (rest ++ newStates) (Set.insert (f, pairs i) visited)
   where 
     finished  = all (\x -> length x == 0) $ take (length i - 1) i
     sorted    = map sort
@@ -59,8 +59,26 @@ bfs (c@(f,i,s):rest) visited | finished  = c
     newStates = filter (not.isQueued) $ filter (not.isVisited) $ nextStates c
       where
         isQueued  (_,x,_) = elem (sorted x) $ map (\(_,y,_) -> sorted y) rest 
-        isVisited (a,x,_) = Set.member (a, sorted x) visited
+        isVisited (a,x,_) = Set.member (a, pairs x) visited
 
+-- Get all sorted types involved in the problem 
+types :: State -> [Type]
+types (_,is,_) = (sort . nub . map toType . concat) is 
+
+-- Get type 
+toType :: Item -> Type 
+toType (Chip x) = x 
+toType (Gen  x) = x
+
+-- State to pairs 
+pairs :: [[Item]] -> [[Int]]
+pairs is = (map (sort . map mp) . groupBy gByType . sortBy sByType . concat . map m) $ zip types [0..] 
+  where 
+    m (a,b)             = zip a (repeat b)
+    types               = map (map toType) is 
+    gByType (a,_) (b,_) = a==b
+    sByType (a,_) (b,_) = compare a b
+    mp (_,x)            = x
 
 main = do 
   -- Solve part 1
@@ -74,3 +92,6 @@ main = do
   let (_, _, s) = bfs [part2] Set.empty 
   print $ length s 
   print $ s 
+
+
+  
