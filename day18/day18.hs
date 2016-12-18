@@ -10,18 +10,10 @@ parseLine = map toType
 grid :: [Type] -> [[Type]]
 grid = iterate nextRow
     where 
-        nextRow row =  (map toType' . window) ([S] ++ row ++ [S]) 
-        toType' (T:T:S:[]) = T 
-        toType' (S:T:T:[]) = T 
-        toType' (T:S:S:[]) = T 
-        toType' (S:S:T:[]) = T 
-        toType' _          = S
-        -- toType  x   = case elem x [[T,T,S], [S,T,T], [T,S,S], [S,S,T]] of 
-        --     True -> T; False -> S;
-
--- Get a sliding window 
-window (a:b:c:rest) = [a:b:c:[]] ++ window (b:c:rest)
-window _            = []
+        nextRow row = nextRow' $ [S]++row++[S]
+        nextRow' (a:b:c:r) | a/=c      = T:nextRow' (b:c:r)
+                           | otherwise = S:nextRow' (b:c:r)
+        nextRow' _         = []
 
 main = do
     let input = ".^^..^...^..^^.^^^.^^^.^^^^^^.^.^^^^.^^.^^^^^^.^...^......^...^^^..^^^.....^^^^^^^^^....^^...^^^^..^"
